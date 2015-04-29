@@ -11,6 +11,5 @@ return array(
     | Please provide the full namespaced path.
     |
     */
-
     'locale_class' => 'Despark\LaravelDbLocalization\I18n',
 );
