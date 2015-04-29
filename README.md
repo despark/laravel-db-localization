@@ -26,18 +26,15 @@ Publish the config file:
 
 	- First you need to create your languages table
 
-	```php
 	Schema::create('i18n', function (Blueprint $table) {
             $table->increments('id');
             $table->string('locale')->unique()->index();
             $table->string('name')->index();
             $table->timestamps();
     });
-    ```
 
     - Example of translatable table
 
-    ```php
     Schema::create('contacts', function (Blueprint $table) {
             $table->increments('id');
 
@@ -46,11 +43,9 @@ Publish the config file:
             $table->string('phone');
             $table->timestamps();
     });
-    ```
 
     - Example of translations table
 
-    ```php
     Schema::create('contacts_i18n', function (Blueprint $table) {
 
             $table->integer('contact_id')->unsigned();
@@ -66,10 +61,8 @@ Publish the config file:
             $table->primary(array('contact_id', 'i18n_id'));
             $table->timestamps();
     });
-    ```
 
 	#Model Example
-	```php
 	<?php
 
 	class Contacts extends Eloquent
@@ -89,16 +82,13 @@ Publish the config file:
 
 	    protected $translatedAttributes = ['contact_id', 'i18n_id', 'name', 'location']; // translatable fillables
 	}
-	```
 
-	```php
 	<?php
 
 	class ContactsI18n extends Eloquent
 	{
 	    protected $table = 'contacts_i18n';
 	}
-	```
 
 	#Config Example
 	app/config/packages/despark/laravel-db-localization/config.php
