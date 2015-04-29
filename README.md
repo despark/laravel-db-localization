@@ -20,9 +20,9 @@ Once it's installed, you need to register the service provider in `app/config/ap
 Publish the config file:
 `php artisan config:publish despark/laravel-db-localization`
 
-## How to use it
+# How to use it
 
-	#Database Example
+	# Database Example
 
 	- First you need to create your languages table
 
@@ -62,7 +62,7 @@ Publish the config file:
             $table->timestamps();
     });
 
-	#Model Example
+	# Model Example
 	<?php
 
 	class Contacts extends Eloquent
@@ -90,7 +90,18 @@ Publish the config file:
 	    protected $table = 'contacts_i18n';
 	}
 
-	#Config Example
+    # View example
+
+    {{ Form::text("fax", null) }}
+    {{ Form::text("phone", null) }}
+
+    @foreach($languages as $language)
+        {{ Form::text("name[name_$language->id]", null) }}  // Follow this convention array( fieldname_languageId );
+        {{ Form::text("location[location_$language->id]", null) }}
+    @endforeach
+
+
+	# Config Example
 	app/config/packages/despark/laravel-db-localization/config.php
 
 	 'locale_class' => 'Despark\LaravelDbLocalization\I18n',
