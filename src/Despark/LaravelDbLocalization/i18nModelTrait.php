@@ -31,7 +31,7 @@ trait i18nModelTrait
     public function getI18nId($locale = null)
     {
         if (!$locale) {
-            $locale = Config::get('app.locale');
+            $locale = \App::getLocale();
         }
         $localeModel =  Config::get('laravel-db-localization::locale_class');
         $i18n = $localeModel::select('id')->where('locale', $locale)->firstOrFail();

@@ -42,7 +42,7 @@ class ContactsController extends BaseController
         $contact = new Contacts();
         $contact->create(Input::all());
 
-        return Redirect::route('translator_example.index');
+        return Redirect::route('localization_example.index');
     }
 
     /**
@@ -52,7 +52,7 @@ class ContactsController extends BaseController
      */
     public function show()
     {
-        return Redirect::route('translator_example.index');
+        return Redirect::route('localization_example.index');
     }
 
     /**
@@ -82,7 +82,7 @@ class ContactsController extends BaseController
         $contact = Contacts::findOrFail($id);
         $contact->save(Input::all());
 
-        return Redirect::route('translator_example.index');
+        return Redirect::route('localization_example.index');
     }
     /**
      * Remove the specified contact from storage.
@@ -95,6 +95,6 @@ class ContactsController extends BaseController
     {
         Contacts::findOrFail($id)->delete();
 
-        return Redirect::route('translator_example.index');
+        return Redirect::route('localization_example.index');
     }
 }

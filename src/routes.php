@@ -7,4 +7,4 @@
 |
 */
 
-Route::resource('translator_example', 'Despark\LaravelDbLocalization\ContactsController');
+Route::resource('localization_example', 'Despark\LaravelDbLocalization\ContactsController');

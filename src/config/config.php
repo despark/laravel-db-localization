@@ -7,7 +7,7 @@ return array(
     | Locale class
     |--------------------------------------------------------------------------
     |
-    | Eloquent model that handles what languages.
+    | Eloquent model that handles your languages.
     | Please provide the full namespaced path.
     |
     */
