@@ -1,10 +1,10 @@
-## Laravel db localization
+# Laravel DB Localization
 
 ## Installation
 
 Open `composer.json` file of your project and add the following to the require array:
 ```json
-"despark/laravel-db-localization": "dev-master"
+"despark/laravel-db-localization": "1.0.0"
 ```
 
 Now run `composer update` to install the new requirement.
