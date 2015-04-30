@@ -22,6 +22,39 @@ trait i18nModelTrait
     }
 
     /**
+     * Get translator field value.
+     *
+     *
+     * @return translator_field
+     */
+    public function getLocaleField()
+    {
+        return $this->locale_field;
+    }
+
+    /**
+     * Get translator field value.
+     *
+     *
+     * @return translator_field
+     */
+    public function getTranslatorField()
+    {
+        return $this->translatedAttributes;
+    }
+
+    /**
+     * Get translator field value.
+     *
+     *
+     * @return translator_field
+     */
+    public function getTranslatedAttributes()
+    {
+        return $this->translator_field;
+    }
+
+    /**
      * Get administration locale id.
      *
      * @param null $locale
@@ -49,9 +82,12 @@ trait i18nModelTrait
     public function translate($locale = null)
     {
         $translationModel  = new $this->translator();
-        $localeId = $this->getI18nId($locale);
+
+        if (!is_int($locale)) {
+            $locale = $this->getI18nId($locale);
+        }
         $trans = $translationModel::where($this->translator_field, $this->id)
-            ->where($this->locale_field, $localeId)->first();
+            ->where($this->locale_field, $locale)->first();
 
         return $trans;
     }
@@ -75,10 +111,14 @@ trait i18nModelTrait
      */
     public function save(array $options = [])
     {
+        if (empty($options)) {
+            $options = \Input::all();
+        }
         // if method is put or patch remove translations
         if (\Request::method() === 'PUT' || \Request::method() === 'PATCH') {
             $this->deleteTranslations($this->id);
         }
+
         $translatableId = $this->saveTranslatable($options);
         $this->saveTranslations($translatableId, $options);
     }
@@ -130,7 +170,6 @@ trait i18nModelTrait
                 }
             }
         }
-
         $translationModel  = new $this->translator();
 
         foreach ($translationsArray as  $translationValues) {

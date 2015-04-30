@@ -70,7 +70,7 @@ Schema::create('contacts_i18n', function (Blueprint $table) {
 ```php
 class Contacts extends Eloquent
 {
-    use i18nModelTrait;  // You must use i18nModelTrait
+    use Despark\LaravelDbLocalization\i18nModelTrait;  // You must use i18nModelTrait
 
     protected $fillable = [
         'fax',
@@ -93,6 +93,7 @@ class ContactsI18n extends Eloquent
 ```
 ## View example
 
+Create
 ```php
 {{ Form::text("fax", null) }}
 {{ Form::text("phone", null) }}
@@ -102,6 +103,18 @@ class ContactsI18n extends Eloquent
     {{ Form::text("location[location_$language->id]", null) }}
 @endforeach
 ```
+Retrieve
+```php
+    // locale string
+    $contacts->translate('en'); // all fields
+    $contacts->translate('en')->location; // specific field
+
+    // locale id
+    $i18nId = 2;
+    $contacts->translate($i18nId); // all fields
+    $contacts->translate('$i18nId')->location; // specific field
+```
+
 
 ## Config Example
 ```php
@@ -120,5 +133,5 @@ Now you must seed `i18n` table:
 `php artisan db:seed --class="Despark\LaravelDbLocalization\DatabaseSeeder"`
 
 Now you can check how it works:
- http://youtdomain.name/localization_example/
+ http://yourdomain.name/localization_example/
 
