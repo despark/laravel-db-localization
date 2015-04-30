@@ -22,19 +22,22 @@ Publish the config file:
 
 # How to use it
 
-# Database Example
+
+## Database Example
 
 - First you need to create your languages table
 
+```php
 Schema::create('i18n', function (Blueprint $table) {
         $table->increments('id');
         $table->string('locale')->unique()->index();
         $table->string('name')->index();
         $table->timestamps();
 });
-
+```
 - Example of translatable table
 
+```php
 Schema::create('contacts', function (Blueprint $table) {
         $table->increments('id');
 
@@ -43,9 +46,10 @@ Schema::create('contacts', function (Blueprint $table) {
         $table->string('phone');
         $table->timestamps();
 });
-
+```
 - Example of translations table
 
+```php
 Schema::create('contacts_i18n', function (Blueprint $table) {
 
         $table->integer('contact_id')->unsigned();
@@ -61,10 +65,9 @@ Schema::create('contacts_i18n', function (Blueprint $table) {
         $table->primary(array('contact_id', 'i18n_id'));
         $table->timestamps();
 });
-
-# Model Example
-<?php
-
+```
+## Model Example
+```php
 class Contacts extends Eloquent
 {
     use i18nModelTrait;  // You must use i18nModelTrait
@@ -83,15 +86,14 @@ class Contacts extends Eloquent
     protected $translatedAttributes = ['contact_id', 'i18n_id', 'name', 'location']; // translatable fillables
 }
 
-<?php
-
 class ContactsI18n extends Eloquent
 {
     protected $table = 'contacts_i18n';
 }
+```
+## View example
 
-# View example
-
+```php
 {{ Form::text("fax", null) }}
 {{ Form::text("phone", null) }}
 
@@ -99,13 +101,13 @@ class ContactsI18n extends Eloquent
     {{ Form::text("name[name_$language->id]", null) }}  // Follow this convention array( fieldname_languageId );
     {{ Form::text("location[location_$language->id]", null) }}
 @endforeach
+```
 
-
-# Config Example
+## Config Example
+```php
 app/config/packages/despark/laravel-db-localization/config.php
-
- 'locale_class' => 'Despark\LaravelDbLocalization\I18n',
-
+    'locale_class' => 'Despark\LaravelDbLocalization\I18n',
+```
 
 ## If you want to checkout our example you need to follow this commands:
 
