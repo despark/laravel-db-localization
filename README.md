@@ -22,92 +22,92 @@ Publish the config file:
 
 # How to use it
 
-	# Database Example
+# Database Example
 
-	- First you need to create your languages table
+- First you need to create your languages table
 
-	Schema::create('i18n', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('locale')->unique()->index();
-            $table->string('name')->index();
-            $table->timestamps();
-    });
+Schema::create('i18n', function (Blueprint $table) {
+        $table->increments('id');
+        $table->string('locale')->unique()->index();
+        $table->string('name')->index();
+        $table->timestamps();
+});
 
-    - Example of translatable table
+- Example of translatable table
 
-    Schema::create('contacts', function (Blueprint $table) {
-            $table->increments('id');
+Schema::create('contacts', function (Blueprint $table) {
+        $table->increments('id');
 
-            // untranslatable columns
-            $table->string('fax');
-            $table->string('phone');
-            $table->timestamps();
-    });
+        // untranslatable columns
+        $table->string('fax');
+        $table->string('phone');
+        $table->timestamps();
+});
 
-    - Example of translations table
+- Example of translations table
 
-    Schema::create('contacts_i18n', function (Blueprint $table) {
+Schema::create('contacts_i18n', function (Blueprint $table) {
 
-            $table->integer('contact_id')->unsigned();
-            $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
-            $table->integer('i18n_id')->unsigned();
-            $table->foreign('i18n_id')->references('id')->on('i18n')->onDelete('cascade');
+        $table->integer('contact_id')->unsigned();
+        $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
+        $table->integer('i18n_id')->unsigned();
+        $table->foreign('i18n_id')->references('id')->on('i18n')->onDelete('cascade');
 
-            // translatable columns
-            $table->string('name', 100);
-            $table->string('location', 100);
+        // translatable columns
+        $table->string('name', 100);
+        $table->string('location', 100);
 
-            $table->unique(['contact_id', 'i18n_id']);
-            $table->primary(array('contact_id', 'i18n_id'));
-            $table->timestamps();
-    });
+        $table->unique(['contact_id', 'i18n_id']);
+        $table->primary(array('contact_id', 'i18n_id'));
+        $table->timestamps();
+});
 
-	# Model Example
-	<?php
+# Model Example
+<?php
 
-	class Contacts extends Eloquent
-	{
-	    use i18nModelTrait;  // You must use i18nModelTrait
+class Contacts extends Eloquent
+{
+    use i18nModelTrait;  // You must use i18nModelTrait
 
-	    protected $fillable = [
-	        'fax',
-	        'phone',
-	    ];
+    protected $fillable = [
+        'fax',
+        'phone',
+    ];
 
-	    protected $translator = 'Despark\LaravelDbLocalization\ContactsI18n'; // Here you need to add your translations table model name
+    protected $translator = 'Despark\LaravelDbLocalization\ContactsI18n'; // Here you need to add your translations table model name
 
-	    protected $translator_field = 'contact_id'; // your translator field name
+    protected $translator_field = 'contact_id'; // your translator field name
 
-	    protected $locale_field = 'i18n_id'; // here is your locale field name
+    protected $locale_field = 'i18n_id'; // here is your locale field name
 
-	    protected $translatedAttributes = ['contact_id', 'i18n_id', 'name', 'location']; // translatable fillables
-	}
+    protected $translatedAttributes = ['contact_id', 'i18n_id', 'name', 'location']; // translatable fillables
+}
 
-	<?php
+<?php
 
-	class ContactsI18n extends Eloquent
-	{
-	    protected $table = 'contacts_i18n';
-	}
+class ContactsI18n extends Eloquent
+{
+    protected $table = 'contacts_i18n';
+}
 
-    # View example
+# View example
 
-    {{ Form::text("fax", null) }}
-    {{ Form::text("phone", null) }}
+{{ Form::text("fax", null) }}
+{{ Form::text("phone", null) }}
 
-    @foreach($languages as $language)
-        {{ Form::text("name[name_$language->id]", null) }}  // Follow this convention array( fieldname_languageId );
-        {{ Form::text("location[location_$language->id]", null) }}
-    @endforeach
-
-
-	# Config Example
-	app/config/packages/despark/laravel-db-localization/config.php
-
-	 'locale_class' => 'Despark\LaravelDbLocalization\I18n',
+@foreach($languages as $language)
+    {{ Form::text("name[name_$language->id]", null) }}  // Follow this convention array( fieldname_languageId );
+    {{ Form::text("location[location_$language->id]", null) }}
+@endforeach
 
 
-## If you want to check our example you need to make this commands:
+# Config Example
+app/config/packages/despark/laravel-db-localization/config.php
+
+ 'locale_class' => 'Despark\LaravelDbLocalization\I18n',
+
+
+## If you want to checkout our example you need to follow this commands:
 
 Execute migrations with the following command
 `php artisan migrate --package="despark/laravel-db-localization"`
