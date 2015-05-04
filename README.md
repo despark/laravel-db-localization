@@ -79,9 +79,9 @@ class Contacts extends Eloquent
 
     protected $translator = 'Despark\LaravelDbLocalization\ContactsI18n'; // Here you need to add your translations table model name
 
-    protected $translator_field = 'contact_id'; // your translator field name
+    protected $translatorField = 'contact_id'; // your translator field name
 
-    protected $locale_field = 'i18n_id'; // here is your locale field name
+    protected $localeField = 'i18n_id'; // here is your locale field name
 
     protected $translatedAttributes = ['contact_id', 'i18n_id', 'name', 'location']; // translatable fillables
 }
@@ -112,7 +112,7 @@ Retrieve
     // locale id
     $i18nId = 2;
     $contacts->translate($i18nId); // all fields
-    $contacts->translate('$i18nId')->location; // specific field
+    $contacts->translate($i18nId)->location; // specific field
 ```
 
 

@@ -25,18 +25,18 @@ trait i18nModelTrait
      * Get translator field value.
      *
      *
-     * @return translator_field
+     * @return translator field
      */
     public function getLocaleField()
     {
-        return $this->locale_field;
+        return $this->localeField;
     }
 
     /**
      * Get translator field value.
      *
      *
-     * @return translator_field
+     * @return translated attributes
      */
     public function getTranslatorField()
     {
@@ -47,11 +47,11 @@ trait i18nModelTrait
      * Get translator field value.
      *
      *
-     * @return translator_field
+     * @return translated attributes
      */
     public function getTranslatedAttributes()
     {
-        return $this->translator_field;
+        return $this->translatorField;
     }
 
     /**
@@ -86,8 +86,8 @@ trait i18nModelTrait
         if (!is_int($locale)) {
             $locale = $this->getI18nId($locale);
         }
-        $trans = $translationModel::where($this->translator_field, $this->id)
-            ->where($this->locale_field, $locale)->first();
+        $trans = $translationModel::where($this->translatorField, $this->id)
+            ->where($this->localeField, $locale)->first();
 
         return $trans;
     }
@@ -158,13 +158,14 @@ trait i18nModelTrait
                 foreach ($input as $i18n => $i18nValue) {
                     if ($i18nValue) {
                         $explode = explode('_', $i18n);
-                        $filedName = array_get($explode, 0);
-                        $i18nId = array_get($explode, 1);
-
+                        $i18nId = array_last($explode, function ($first, $last) {
+                            return $last;
+                        });
+                        $filedName = str_replace('_'.$i18nId, '', $i18n);
                         if (in_array($filedName, $fillables)) {
                             $translationsArray[$i18nId][$filedName] = $i18nValue;
-                            $translationsArray[$i18nId][$this->locale_field] = $i18nId;
-                            $translationsArray[$i18nId][$this->translator_field] = $translatableId;
+                            $translationsArray[$i18nId][$this->localeField] = $i18nId;
+                            $translationsArray[$i18nId][$this->translatorField] = $translatableId;
                         }
                     }
                 }
@@ -186,6 +187,6 @@ trait i18nModelTrait
     {
         $translationModel  = new $this->translator();
 
-        $translationModel::where($this->translator_field, $translatableId)->delete();
+        $translationModel::where($this->translatorField, $translatableId)->delete();
     }
 }

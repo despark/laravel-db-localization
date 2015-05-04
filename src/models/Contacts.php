@@ -28,14 +28,14 @@ class Contacts extends Eloquent
      *
      * @var string
      */
-    protected $translator_field = 'contact_id';
+    protected $translatorField = 'contact_id';
 
     /**
      * Localization locale field name.
      *
      * @var string
      */
-    protected $locale_field = 'i18n_id';
+    protected $localeField = 'i18n_id';
 
     /**
      * Localization fillables.
