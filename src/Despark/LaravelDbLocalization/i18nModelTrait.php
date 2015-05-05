@@ -86,10 +86,15 @@ trait i18nModelTrait
         if (!is_int($locale)) {
             $locale = $this->getI18nId($locale);
         }
-        $trans = $translationModel::where($this->translatorField, $this->id)
-            ->where($this->localeField, $locale)->first();
 
-        return $trans;
+        $translation = null;
+
+        if (!isset($this->id)) {
+            $translation = $translationModel::where($this->translatorField, $this->id)
+            ->where($this->localeField, $locale)->first();
+        }
+
+        return $translation;
     }
 
     /**
