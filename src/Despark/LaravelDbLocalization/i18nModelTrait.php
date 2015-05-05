@@ -102,6 +102,8 @@ trait i18nModelTrait
         $model = new static($attributes);
 
         $model->save($attributes);
+
+        return $model;
     }
 
     /**
