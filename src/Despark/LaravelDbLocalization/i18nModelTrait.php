@@ -89,9 +89,9 @@ trait i18nModelTrait
 
         $translation = null;
 
-        if (!isset($this->id)) {
+        if (isset($this->id)) {
             $translation = $translationModel::where($this->translatorField, $this->id)
-            ->where($this->localeField, $locale)->first();
+                ->where($this->localeField, $locale)->first();
         }
 
         return $translation;
