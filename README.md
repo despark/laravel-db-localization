@@ -4,7 +4,7 @@
 
 Open `composer.json` file of your project and add the following to the require array:
 ```json
-"despark/laravel-db-localization": "1.1.0"
+"despark/laravel-db-localization": "1.1.1"
 ```
 
 Now run `composer update` to install the new requirement.
