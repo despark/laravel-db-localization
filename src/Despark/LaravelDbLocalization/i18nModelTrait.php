@@ -40,7 +40,7 @@ trait i18nModelTrait
      */
     public function getTranslatorField()
     {
-        return $this->translatedAttributes;
+        return $this->translatorField;
     }
 
     /**
@@ -51,7 +51,7 @@ trait i18nModelTrait
      */
     public function getTranslatedAttributes()
     {
-        return $this->translatorField;
+        return $this->translatedAttributes;
     }
 
     /**
@@ -79,7 +79,7 @@ trait i18nModelTrait
      *
      * @param null $locale
      */
-    public function translate($locale = null)
+    public function translate($locale = false)
     {
         $translationModel  = new $this->translator();
 
@@ -89,7 +89,7 @@ trait i18nModelTrait
 
         $translation = null;
 
-        if (isset($this->id)) {
+        if (isset($this->id) && !$locale) {
             $translation = $translationModel::where($this->translatorField, $this->id)
                 ->where($this->localeField, $locale)->first();
         }
