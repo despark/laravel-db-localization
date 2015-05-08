@@ -67,11 +67,15 @@ trait i18nModelTrait
             $locale = \App::getLocale();
         }
         $localeModel =  Config::get('laravel-db-localization::locale_class');
-        $i18n = $localeModel::select('id')->where('locale', $locale)->firstOrFail();
+        $i18n = $localeModel::select('id')->where('locale', $locale)->first();
 
-        $this->i18nId = $i18n->id;
+        $i18nId = null;
 
-        return $this->i18nId;
+        if (isset($i18n->id)) {
+            $i18nId = $i18n->id;
+        }
+
+        return $i18nId;
     }
 
     /**
@@ -86,10 +90,9 @@ trait i18nModelTrait
         if (!is_int($locale)) {
             $locale = $this->getI18nId($locale);
         }
-
         $translation = null;
 
-        if (isset($this->id) && !$locale) {
+        if (isset($this->id) && $locale) {
             $translation = $translationModel::where($this->translatorField, $this->id)
                 ->where($this->localeField, $locale)->first();
         }
