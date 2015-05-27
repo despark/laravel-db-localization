@@ -22,6 +22,16 @@ trait i18nModelTrait
     }
 
     /**
+     * Get translator model name.
+     *
+     * @return mixed
+     */
+    public function getTranslator()
+    {
+        return $this->translator;
+    }
+
+    /**
      * Get translator field value.
      *
      *
