@@ -110,18 +110,21 @@ trait i18nModelTrait
         return $translation;
     }
 
-    public function scopeWithTranslations($query, $locale = 'en')
+    public function scopeWithTranslations($query, $locale = null)
     {
         $i18nId = $this->getI18nId($locale);
         $translatorTable = new $this->translator();
         $translatorTableName = $translatorTable->getTable();
 
-        return $query->join(
-                $translatorTableName,
-                $translatorTableName.'.'.$this->getTranslatorField(), '=', $this->getTable().'.id',
-                'left'
-            )
-            ->where($translatorTableName.'.'.$this->getLocaleField(), '=', $i18nId);
+        $query = $query->leftJoin(
+        $translatorTableName,
+        $translatorTableName.'.'.$this->getTranslatorField(), '=', $this->getTable().'.id');
+
+        if ($locale) {
+            $query = $query->where($translatorTableName.'.'.$this->getLocaleField(), '=', $i18nId);
+        }
+
+        return $query;
     }
 
     /**
