@@ -110,7 +110,7 @@ trait i18nModelTrait
         return $translation;
     }
 
-    public function scopeWithTranslations($query, $locale = null)
+    public function scopeWithTranslations($query, $locale = null, $softDelete = null)
     {
         $i18nId = $this->getI18nId($locale);
         $translatorTable = new $this->translator();
@@ -122,6 +122,10 @@ trait i18nModelTrait
 
         if ($locale) {
             $query = $query->where($translatorTableName.'.'.$this->getLocaleField(), '=', $i18nId);
+        }
+
+        if ($softDelete) {
+            $query = $query->whereNULL($translatorTableName.'.deleted_at');
         }
 
         return $query;
