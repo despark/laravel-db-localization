@@ -215,7 +215,7 @@ trait i18nModelTrait
         $translationModel  = new $this->translator();
 
         foreach ($translationsArray as  $translationValues) {
-            $translationModel->insert($translationValues);
+            $translationModel->create($translationValues);
         }
     }
 

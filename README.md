@@ -89,6 +89,8 @@ class Contacts extends Eloquent
 class ContactsI18n extends Eloquent
 {
     protected $table = 'contacts_i18n';
+
+    protected $fillable = ['contact_id', 'i18n_id', 'name', 'location'];
 }
 ```
 ## View example
