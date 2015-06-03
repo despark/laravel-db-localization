@@ -115,13 +115,24 @@ trait i18nModelTrait
         $i18nId = $this->getI18nId($locale);
         $translatorTable = new $this->translator();
         $translatorTableName = $translatorTable->getTable();
+        $transfield = $this->getTranslatorField();
+        $table = $this->getTable();
+        $localeField = $this->getLocaleField();
 
-        $query = $query->leftJoin(
-        $translatorTableName,
-        $translatorTableName.'.'.$this->getTranslatorField(), '=', $this->getTable().'.id');
-
-        if ($locale) {
-            $query = $query->where($translatorTableName.'.'.$this->getLocaleField(), '=', $i18nId);
+        if (! $locale) {
+            $query = $query->leftJoin(
+            $translatorTableName,
+            $translatorTableName.'.'.$transfield, '=', $table.'.id');
+        } else {
+            $query = $query->leftJoin(\DB::raw(
+            '( SELECT
+                    translatorAlias.*
+                FROM '.$translatorTableName.' as translatorAlias
+                WHERE translatorAlias.'.$localeField.' = '.$i18nId.'
+             ) as '.$translatorTableName
+            ), function ($join) use ($translatorTableName, $transfield, $table) {
+                $join->on($translatorTableName.'.'.$transfield, '=', $table.'.id');
+            });
         }
 
         if ($softDelete) {
@@ -154,10 +165,6 @@ trait i18nModelTrait
     {
         if (empty($options)) {
             $options = \Input::all();
-        }
-        // if method is put or patch remove translations
-        if (\Request::method() === 'PUT' || \Request::method() === 'PATCH') {
-            $this->deleteTranslations($this->id);
         }
 
         $translatableId = $this->saveTranslatable($options);
@@ -212,22 +219,21 @@ trait i18nModelTrait
                 }
             }
         }
-        $translationModel  = new $this->translator();
+
+        $modelName = $this->translator;
 
         foreach ($translationsArray as  $translationValues) {
-            $translationModel->create($translationValues);
+            $translation = $modelName::where($this->translatorField, array_get($translationValues, $this->translatorField))
+                ->where($this->localeField, array_get($translationValues, $this->localeField))
+                ->first();
+
+            if (! isset($translation->id)) {
+                $translation = new $modelName();
+            }
+            foreach ($translationValues as $key => $val) {
+                $translation->$key = $val;
+            }
+            $translation->save();
         }
-    }
-
-    /**
-     * Delete all translations.
-     *
-     * @param array translatable Id
-     */
-    public function deleteTranslations($translatableId)
-    {
-        $translationModel  = new $this->translator();
-
-        $translationModel::where($this->translatorField, $translatableId)->delete();
     }
 }
