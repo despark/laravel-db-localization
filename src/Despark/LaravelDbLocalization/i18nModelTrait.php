@@ -112,26 +112,35 @@ trait i18nModelTrait
 
     public function scopeWithTranslations($query, $locale = null, $softDelete = null)
     {
+        // get i18n id by locale
         $i18nId = $this->getI18nId($locale);
+
         $translatorTable = new $this->translator();
         $translatorTableName = $translatorTable->getTable();
-        $transfield = $this->getTranslatorField();
-        $table = $this->getTable();
+        $translatableTable = $this->getTable();
+
+        $translatorField = $this->getTranslatorField();
         $localeField = $this->getLocaleField();
 
         if (! $locale) {
             $query = $query->leftJoin(
             $translatorTableName,
-            $translatorTableName.'.'.$transfield, '=', $table.'.id');
+            $translatorTableName.'.'.$translatorField, '=', $translatableTable.'.id');
         } else {
+            $aliasSoftDelete = '';
+            if ($softDelete) {
+                $aliasSoftDelete = 'AND translatorAlias.deleted_at is null ';
+            }
+
             $query = $query->leftJoin(\DB::raw(
             '( SELECT
                     translatorAlias.*
                 FROM '.$translatorTableName.' as translatorAlias
                 WHERE translatorAlias.'.$localeField.' = '.$i18nId.'
+                '.$aliasSoftDelete.'
              ) as '.$translatorTableName
-            ), function ($join) use ($translatorTableName, $transfield, $table) {
-                $join->on($translatorTableName.'.'.$transfield, '=', $table.'.id');
+            ), function ($join) use ($translatorTableName, $translatorField, $translatableTable) {
+                $join->on($translatorTableName.'.'.$translatorField, '=', $translatableTable.'.id');
             });
         }
 
@@ -140,20 +149,6 @@ trait i18nModelTrait
         }
 
         return $query;
-    }
-
-    /**
-     * Create new record.
-     *
-     * @param array $attributes
-     */
-    public static function create(array $attributes)
-    {
-        $model = new static($attributes);
-
-        $model->save($attributes);
-
-        return $model;
     }
 
     /**
