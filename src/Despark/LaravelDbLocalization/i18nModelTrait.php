@@ -76,7 +76,7 @@ trait i18nModelTrait
         if (!$locale) {
             $locale = \App::getLocale();
         }
-        $localeModel =  Config::get('laravel-db-localization::locale_class');
+        $localeModel = Config::get('laravel-db-localization::locale_class');
         $i18n = $localeModel::select('id')->where('locale', $locale)->first();
 
         $i18nId = null;
@@ -91,20 +91,28 @@ trait i18nModelTrait
     /**
      * Get specific translation.
      *
-     * @param null $locale
+     * @param false $locale
      */
-    public function translate($locale = false)
+    public function translate($locale = false, $alowRevision = false)
     {
+        $translation = null;
         $translationModel  = new $this->translator();
 
         if (!is_int($locale)) {
             $locale = $this->getI18nId($locale);
         }
-        $translation = null;
 
         if (isset($this->id) && $locale) {
             $translation = $translationModel::where($this->translatorField, $this->id)
                 ->where($this->localeField, $locale)->first();
+        }
+
+        if ($alowRevision == true) {
+            if (isset($translation->show_revision)) {
+                if ($translation->show_revision == 1) {
+                    $translation = $translation->setAttributeNames(unserialize($translation->revision));
+                }
+            }
         }
 
         return $translation;
@@ -162,24 +170,9 @@ trait i18nModelTrait
             $options = \Input::all();
         }
 
-        $translatableId = $this->saveTranslatable($options);
-        $this->saveTranslations($translatableId, $options);
-    }
+        $this->saveTranslations($this->id, $options);
 
-    /**
-     * Save untranslatable falues.
-     *
-     * @param array $options
-     *
-     * @return translatable Id
-     */
-    public function saveTranslatable($options)
-    {
-        parent::save($options);
-
-        $translatableId = $this->id;
-
-        return $translatableId;
+        return $this;
     }
 
     /**
@@ -187,8 +180,6 @@ trait i18nModelTrait
      *
      * @param array translatable Id
      * @param array $options
-     *
-     * @return id
      */
     public function saveTranslations($translatableId, $options)
     {
@@ -196,20 +187,19 @@ trait i18nModelTrait
         $explode = [];
 
         $fillables = $this->translatedAttributes;
+
         foreach ($options as $input) {
             if (is_array($input)) {
                 foreach ($input as $i18n => $i18nValue) {
-                    if ($i18nValue) {
-                        $explode = explode('_', $i18n);
-                        $i18nId = array_last($explode, function ($first, $last) {
+                    $explode = explode('_', $i18n);
+                    $i18nId = array_last($explode, function ($first, $last) {
                             return $last;
                         });
-                        $filedName = str_replace('_'.$i18nId, '', $i18n);
-                        if (in_array($filedName, $fillables)) {
-                            $translationsArray[$i18nId][$filedName] = $i18nValue;
-                            $translationsArray[$i18nId][$this->localeField] = $i18nId;
-                            $translationsArray[$i18nId][$this->translatorField] = $translatableId;
-                        }
+                    $filedName = str_replace('_'.$i18nId, '', $i18n);
+                    if (in_array($filedName, $fillables)) {
+                        $translationsArray[$i18nId][$filedName] = $i18nValue;
+                        $translationsArray[$i18nId][$this->localeField] = $i18nId;
+                        $translationsArray[$i18nId][$this->translatorField] = $translatableId;
                     }
                 }
             }
@@ -222,13 +212,24 @@ trait i18nModelTrait
                 ->where($this->localeField, array_get($translationValues, $this->localeField))
                 ->first();
 
-            if (! isset($translation->id)) {
-                $translation = new $modelName();
-            }
+            // check if translation exists with same values
+            $query = $modelName::select('id');
             foreach ($translationValues as $key => $val) {
-                $translation->$key = $val;
+                $query->where($key, $val);
             }
-            $translation->save();
+            $result = $query->first();
+
+            if (!isset($result->id)) {
+                if (! isset($translation->id)) {
+                    $translation = new $modelName();
+                }
+
+                foreach ($translationValues as $key => $val) {
+                    $translation->$key = $val;
+                }
+
+                $translation->save();
+            }
         }
     }
 }
