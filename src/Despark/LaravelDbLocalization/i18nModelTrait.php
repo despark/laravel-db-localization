@@ -170,6 +170,8 @@ trait i18nModelTrait
             $options = \Input::all();
         }
 
+        parent::save($options);
+
         $this->saveTranslations($this->id, $options);
 
         return $this;
