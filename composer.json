@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-          "Despark\\LaravelDbLocalizationServiceProvider\\": "src/"
+          "Despark\\LaravelDbLocalization\\": "src/"
         }
     },
     "minimum-stability": "stable"
