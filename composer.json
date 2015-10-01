@@ -11,18 +11,11 @@
     ],
     "require": {
         "php": ">=5.4.0",
-        "illuminate/support": "4.2.*"
+        "illuminate/database": "5.1.*"
     },
     "autoload": {
-        "classmap": [
-            "src/migrations",
-            "src/controllers",
-            "src/models",
-            "src/views",
-            "src/seeds"
-        ],
-        "psr-0": {
-            "Despark\\LaravelDbLocalization\\": "src/"
+        "psr-4": {
+          "Despark\\LaravelDbLocalizationServiceProvider\\": "src/"
         }
     },
     "minimum-stability": "stable"

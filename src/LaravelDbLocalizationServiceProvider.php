@@ -7,20 +7,17 @@ use Illuminate\Support\ServiceProvider;
 class LaravelDbLocalizationServiceProvider extends ServiceProvider
 {
     /**
-     * Indicates if loading of the provider is deferred.
-     *
-     * @var bool
-     */
-    protected $defer = false;
-
-    /**
      * Bootstrap the application events.
      */
     public function boot()
     {
-        $this->package('despark/laravel-db-localization');
+        $this->publishes([
+            __DIR__.'/src/config/laravel-db-localization.php' => config_path('laravel-db-localization.php'),
+        ], 'config');
 
-        include __DIR__.'/../../routes.php';
+        $this->publishes([
+            __DIR__.'/src/migrations/' => base_path('/database/migrations'),
+        ], 'migrations');
     }
 
     /**
@@ -28,7 +25,9 @@ class LaravelDbLocalizationServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind('laravel-db-localization', function ($app) {
+            return new LaravelDbLocalization();
+        });
     }
 
     /**
