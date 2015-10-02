@@ -7,6 +7,15 @@ use Illuminate\Support\ServiceProvider;
 class LaravelDbLocalizationServiceProvider extends ServiceProvider
 {
     /**
+     * Register the service provider.
+     */
+    public function register()
+    {
+        $this->app->bind('laravel-db-localization', function ($app) {
+            return new LaravelDbLocalization();
+        });
+    }
+    /**
      * Bootstrap the application events.
      */
     public function boot()
@@ -18,25 +27,5 @@ class LaravelDbLocalizationServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__.'/src/migrations/' => base_path('/database/migrations'),
         ], 'migrations');
-    }
-
-    /**
-     * Register the service provider.
-     */
-    public function register()
-    {
-        $this->app->bind('laravel-db-localization', function ($app) {
-            return new LaravelDbLocalization();
-        });
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return array();
     }
 }
