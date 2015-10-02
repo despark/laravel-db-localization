@@ -21,11 +21,11 @@ class LaravelDbLocalizationServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__.'/src/config/laravel-db-localization.php' => config_path('laravel-db-localization.php'),
+            __DIR__.'/config/laravel-db-localization.php' => config_path('laravel-db-localization.php'),
         ], 'config');
 
         $this->publishes([
-            __DIR__.'/src/migrations/' => base_path('/database/migrations'),
+            __DIR__.'/migrations/' => base_path('/database/migrations'),
         ], 'migrations');
     }
 }
