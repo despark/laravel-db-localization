@@ -1,4 +1,4 @@
-# Laravel DB Localization for laravel 5.1
+# Laravel DB Localization for version 5.1
 
 *Note: if you are looking for the version for Laravel 4.2 check out [v1 branch](https://github.com/despark/laravel-db-localization/tree/v1).*
 
@@ -67,7 +67,7 @@ Schema::create('contacts_i18n', function (Blueprint $table) {
         $table->string('location', 100);
 
         $table->unique(['contact_id', 'i18n_id']);
-        $table->primary(array('contact_id', 'i18n_id'));
+        $table->primary(['contact_id', 'i18n_id']);
         $table->timestamps();
 });
 ```
@@ -126,7 +126,7 @@ Retrieve
 ## Config Example
 ```php
 config/laravel-db-localization.php
-    'locale_class' => 'Despark\LaravelDbLocalization\I18n',
+    'locale_class' => 'Despark\LaravelDbLocalization\I18n', // Eloquent model that handles your languages.
 ```
 
 
