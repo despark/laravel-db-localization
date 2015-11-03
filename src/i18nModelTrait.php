@@ -2,8 +2,6 @@
 
 namespace Despark\LaravelDbLocalization;
 
-use Illuminate\Support\Facades\Config;
-
 trait i18nModelTrait
 {
     /**
@@ -76,7 +74,8 @@ trait i18nModelTrait
         if (!$locale) {
             $locale = \App::getLocale();
         }
-        $localeModel = Config::get('laravel-db-localization::locale_class');
+
+        $localeModel = config('laravel-db-localization.locale_class');
         $i18n = $localeModel::select('id')->where('locale', $locale)->first();
 
         $i18nId = null;
@@ -105,6 +104,10 @@ trait i18nModelTrait
         if (isset($this->id) && $locale) {
             $translation = $translationModel::where($this->translatorField, $this->id)
                 ->where($this->localeField, $locale)->first();
+
+            if (!$translation) {
+                $translation = $translationModel;
+            }
         }
 
         if ($alowRevision == true) {
@@ -233,5 +236,17 @@ trait i18nModelTrait
                 $translation->save();
             }
         }
+    }
+
+    public function getTranslatedNoIdAttributes()
+    {
+        $array = [];
+        foreach ($this->translatedAttributes as $attr) {
+            if (strpos($attr, '_id') === false) {
+                array_push($array, $attr);
+            }
+        }
+
+        return $array;
     }
 }

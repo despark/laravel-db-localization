@@ -1,24 +1,24 @@
-# Laravel DB Localization
+# Laravel DB Localization for laravel 5.1
 
 ## Installation
 
 Open `composer.json` file of your project and add the following to the require array:
 ```json
-"despark/laravel-db-localization": "1.2.*"
+"despark/laravel-db-localization": "2.0.*"
 ```
 
 Now run `composer update` to install the new requirement.
 
-Once it's installed, you need to register the service provider in `app/config/app.php` in the providers array:
+Once it's installed, you need to register the service provider in `config/app.php` in the providers array:
 ```php
 'providers' => array(
   ...
-  'Despark\LaravelDbLocalization\LaravelDbLocalizationServiceProvider',
+  Despark\LaravelDbLocalization\LaravelDbLocalizationServiceProvider::class,
 );
 ```
 
 Publish the config file:
-`php artisan config:publish despark/laravel-db-localization`
+`php artisan vendor:publish --provider="Despark\LaravelDbLocalization\LaravelDbLocalizationServiceProvider" --tag="config"`
 
 # How to use it
 
@@ -68,9 +68,12 @@ Schema::create('contacts_i18n', function (Blueprint $table) {
 ```
 ## Model Example
 ```php
+
+use Despark\LaravelDbLocalization\i18nModelTrait;
+
 class Contacts extends Eloquent
 {
-    use Despark\LaravelDbLocalization\i18nModelTrait;  // You must use i18nModelTrait
+    use i18nModelTrait; // You must use i18nModelTrait
 
     protected $fillable = [
         'fax',
@@ -89,20 +92,18 @@ class Contacts extends Eloquent
 class ContactsI18n extends Eloquent
 {
     protected $table = 'contacts_i18n';
-
-    protected $fillable = ['contact_id', 'i18n_id', 'name', 'location'];
 }
 ```
 ## View example
 
 Create
 ```php
-{{ Form::text("fax", null) }}
-{{ Form::text("phone", null) }}
+{!! Form::text("fax", null) !!}
+{!! Form::text("phone", null) !!}
 
 @foreach($languages as $language)
-    {{ Form::text("name[name_$language->id]", null) }}  // Follow this convention array( fieldname_languageId );
-    {{ Form::text("location[location_$language->id]", null) }}
+    {!! Form::text("name[name_$language->id]", null) !!}  // Follow this convention array( fieldname_languageId );
+    {!! Form::text("location[location_$language->id]", null) !!}
 @endforeach
 ```
 Retrieve
@@ -117,23 +118,10 @@ Retrieve
     $contacts->translate($i18nId)->location; // specific field
 ```
 
-
 ## Config Example
 ```php
-app/config/packages/despark/laravel-db-localization/config.php
+config/laravel-db-localization.php
     'locale_class' => 'Despark\LaravelDbLocalization\I18n',
 ```
 
-## If you want to checkout our example you need to follow this commands:
-
-Execute migrations with the following command
-`php artisan migrate --package="despark/laravel-db-localization"`
-
-This will create tables `i18n`, `contacts`, `contacts_i18n`.
-
-Now you must seed `i18n` table:
-`php artisan db:seed --class="Despark\LaravelDbLocalization\DatabaseSeeder"`
-
-Now you can check how it works:
- http://yourdomain.name/localization_example/
 
