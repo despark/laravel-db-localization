@@ -19,8 +19,11 @@ Once it's installed, you need to register the service provider in `config/app.ph
 );
 ```
 
-Publish the config file:
+Publish config file:
 `php artisan vendor:publish --provider="Despark\LaravelDbLocalization\LaravelDbLocalizationServiceProvider" --tag="config"`
+
+Publish migrations:
+`php artisan vendor:publish --provider="Despark\LaravelDbLocalization\LaravelDbLocalizationServiceProvider" --tag="migrations"`
 
 # How to use it
 
