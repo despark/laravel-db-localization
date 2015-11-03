@@ -1,5 +1,7 @@
 # Laravel DB Localization for laravel 5.1
 
+*Note: if you are looking for the version for Laravel 4.2 check out [v1 branch](https://github.com/despark/laravel-db-localization/tree/v1).*
+
 ## Installation
 
 Open `composer.json` file of your project and add the following to the require array:
