@@ -95,7 +95,7 @@ trait i18nModelTrait
     public function translate($locale = false, $alowRevision = false)
     {
         $translation = null;
-        $translationModel  = new $this->translator();
+        $translationModel = new $this->translator();
 
         if (!is_int($locale)) {
             $locale = $this->getI18nId($locale);
@@ -133,7 +133,7 @@ trait i18nModelTrait
         $translatorField = $this->getTranslatorField();
         $localeField = $this->getLocaleField();
 
-        if (! $locale) {
+        if (!$locale) {
             $query = $query->leftJoin(
             $translatorTableName,
             $translatorTableName.'.'.$translatorField, '=', $translatableTable.'.id');
@@ -170,7 +170,7 @@ trait i18nModelTrait
     public function save(array $options = [])
     {
         if (empty($options)) {
-            $options = \Input::all();
+            $options = \Request::all();
         }
 
         parent::save($options);
@@ -225,7 +225,7 @@ trait i18nModelTrait
             $result = $query->first();
 
             if (!isset($result->id)) {
-                if (! isset($translation->id)) {
+                if (!isset($translation->id)) {
                     $translation = new $modelName();
                 }
 

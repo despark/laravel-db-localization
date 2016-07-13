@@ -12,8 +12,10 @@ class CreateI18nTable extends Migration
     {
         Schema::create('i18n', function (Blueprint $table) {
             $table->increments('id');
+
             $table->string('locale')->unique()->index();
             $table->string('name')->index();
+
             $table->timestamps();
         });
     }
