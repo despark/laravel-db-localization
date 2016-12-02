@@ -1,6 +1,6 @@
 <?php
 
-return array(
+return [
 
     /*
     |--------------------------------------------------------------------------
@@ -11,5 +11,5 @@ return array(
     | Please provide the full namespaced path.
     |
     */
-    'locale_class' => 'Despark\LaravelDbLocalization\I18n',
-);
+    'locale_class' => \Despark\LaravelDbLocalization\I18n::class,
+];

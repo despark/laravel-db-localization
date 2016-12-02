@@ -8,15 +8,13 @@
         "localization",
         "database"
     ],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Tihomir Banov",
-            "email": "tbanov@despark.com"
-        }
-    ],
+    "license": "GPL-3.0",
+    "authors": [{
+        "name": "Tihomir Banov",
+        "email": "tbanov@despark.com"
+    }],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "illuminate/auth": "^5.1",
         "illuminate/support": "^5.1",
         "illuminate/routing": "^5.1",
@@ -30,6 +28,5 @@
             "Despark\\LaravelDbLocalization\\": "src/"
         }
     },
-    "minimum-stability": "stable",
-    "version": "0.0.1"
+    "minimum-stability": "stable"
 }
