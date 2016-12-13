@@ -11,7 +11,6 @@ class CreateContactsTable extends Migration
     public function up()
     {
         Schema::create('contacts', function (Blueprint $table) {
-
             $table->increments('id');
 
             // untranslatable columns

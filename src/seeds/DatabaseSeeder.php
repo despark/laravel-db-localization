@@ -10,13 +10,13 @@ class DatabaseSeeder extends \Seeder
     public function run()
     {
         \DB::table('i18n')->insert([
-                'name'   => 'English',
-                'locale' => 'en',
+            'name' => 'English',
+            'locale' => 'en',
         ]);
 
         \DB::table('i18n')->insert([
-                'name'   => 'Български',
-                'locale' => 'bg',
+            'name' => 'Български',
+            'locale' => 'bg',
         ]);
     }
 }

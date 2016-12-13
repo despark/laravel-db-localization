@@ -15,6 +15,6 @@ class I18n extends Eloquent
 
     protected $rules = [
         'locale' => 'required',
-        'name'   => 'required',
+        'name' => 'required',
     ];
 }

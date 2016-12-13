@@ -3,14 +3,12 @@
     "description": "Database localization package for laravel framework",
     "keywords": ["framework", "laravel", "despark", "localization", "database"],
     "license": "MIT",
-    "authors": [
-        {
-            "name": "Tihomir Banov",
-            "email": "tbanov@despark.com"
-        }
-    ],
+    "authors": [{
+        "name": "Tihomir Banov",
+        "email": "tbanov@despark.com"
+    }],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=5.5.0",
         "illuminate/support": "4.2.*"
     },
     "autoload": {

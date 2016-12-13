@@ -11,7 +11,6 @@ class CreateContactsI18nTable extends Migration
     public function up()
     {
         Schema::create('contacts_i18n', function (Blueprint $table) {
-
             $table->integer('contact_id')->unsigned();
             $table->foreign('contact_id')->references('id')->on('contacts')->onDelete('cascade');
             $table->integer('i18n_id')->unsigned();
