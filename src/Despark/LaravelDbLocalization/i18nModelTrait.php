@@ -14,7 +14,6 @@ trait i18nModelTrait
 
     protected $i18nId;
 
-
     /**
      * Setup a one-to-many relation.
      *
@@ -69,6 +68,14 @@ trait i18nModelTrait
     }
 
     /**
+     * Boot the trait.
+     */
+    public static function bootI18nModelTrait()
+    {
+        static::observe(new LocalizationObserver());
+    }
+
+    /**
      * Get administration locale id.
      *
      * @param null $locale
@@ -100,28 +107,26 @@ trait i18nModelTrait
      */
     public function translate($locale = null, $alowRevision = false)
     {
-        if ($this->translation === null) {
-            if (!is_int($locale)) {
-                $locale = $this->getI18nId($locale);
-            }
+        if (!is_int($locale)) {
+            $locale = $this->getI18nId($locale);
+        }
 
-            if (isset($this->id) && $locale) {
-                $localeField = $this->getLocaleField();
-                $this->translation = $this->translations->filter(function ($item) use ($locale, $localeField) {
-                    return $item->{$localeField} === $locale;
-                })->first();
-            }
+        if (isset($this->id) && $locale) {
+            $localeField = $this->getLocaleField();
+            $translation = $this->translations->filter(function ($item) use ($locale, $localeField) {
+                return $item->{$localeField} === $locale;
+            })->first();
+        }
 
-            if ($alowRevision == true) {
-                if (isset($translation->show_revision)) {
-                    if ($translation->show_revision == 1) {
-                        $this->translation = $translation->setAttributeNames(unserialize($translation->revision));
-                    }
+        if ($alowRevision == true) {
+            if (isset($translation->show_revision)) {
+                if ($translation->show_revision == 1) {
+                    $this->translation = $translation->setAttributeNames(unserialize($translation->revision));
                 }
             }
         }
 
-        return $this->translation;
+        return $translation;
     }
 
     public function scopeWithTranslations($query, $locale = null, $softDelete = null)
@@ -188,14 +193,15 @@ trait i18nModelTrait
          foreach ($translationsArray as  $translationValues) {
              $translatorId = array_get($translationValues, $this->translatorField);
              $localeId = array_get($translationValues, $this->localeField);
-             $translation = $this->translator->where($this->translatorField, $translatorId)
+             $translator = App::make($this->translator);
+             $translation = $translator->where($this->translatorField, $translatorId)
                  ->where($this->localeField, $localeId)
                  ->first();
              if (!$translation) {
-                 $translation = App::make($this->translator);
+                 $translation = $translator;
              }
 
-             $translation->fillable = array_keys($translationValues);
+            //  $translation->fillable = array_keys($translationValues);
              $translation->fill($translationValues);
              $translation->save();
          }
