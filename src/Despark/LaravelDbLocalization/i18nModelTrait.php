@@ -111,6 +111,7 @@ trait i18nModelTrait
             $locale = $this->getI18nId($locale);
         }
 
+        $translation = null;
         if (isset($this->id) && $locale) {
             $localeField = $this->getLocaleField();
             $translation = $this->translations->filter(function ($item) use ($locale, $localeField) {
