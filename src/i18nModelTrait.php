@@ -94,26 +94,22 @@ trait i18nModelTrait
      */
     public function translate($locale = null, $alowRevision = false)
     {
-        $translation = null;
-        $translationModel = app($this->translator);
-
         if (!is_int($locale)) {
             $locale = $this->getI18nId($locale);
         }
 
+        $translation = null;
         if (isset($this->id) && $locale) {
-            $translation = $translationModel::where($this->translatorField, $this->id)
-                ->where($this->localeField, $locale)->first();
-
-            if (!$translation) {
-                $translation = $translationModel;
-            }
+            $localeField = $this->getLocaleField();
+            $translation = $this->translations->filter(function ($item) use ($locale, $localeField) {
+                return $item->{$localeField} === $locale;
+            })->first();
         }
 
         if ($alowRevision == true) {
             if (isset($translation->show_revision)) {
                 if ($translation->show_revision == 1) {
-                    $translation = $translation->setAttributeNames(unserialize($translation->revision));
+                    $this->translation = $translation->setAttributeNames(unserialize($translation->revision));
                 }
             }
         }
@@ -199,7 +195,7 @@ trait i18nModelTrait
             $translatorId = array_get($translationValues, $this->translatorField);
             $localeId = array_get($translationValues, $this->localeField);
 
-            $translation = $this->translator::where($this->translatorField, $translatorId)
+            $translation = $this->translator->where($this->translatorField, $translatorId)
                 ->where($this->localeField, $localeId)
                 ->first();
 
