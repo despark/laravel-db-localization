@@ -195,7 +195,7 @@ trait i18nModelTrait
             $translatorId = array_get($translationValues, $this->translatorField);
             $localeId = array_get($translationValues, $this->localeField);
 
-            $translation = $this->translator->where($this->translatorField, $translatorId)
+            $translation = app($this->translator)->where($this->translatorField, $translatorId)
                 ->where($this->localeField, $localeId)
                 ->first();
 
