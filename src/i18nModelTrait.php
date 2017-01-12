@@ -16,7 +16,7 @@ trait i18nModelTrait
      */
     public function translations()
     {
-        return $this->hasMany($this->translator);
+        return $this->hasMany($this->translator, $this->translatorField, $this->localeField);
     }
 
     /**
