@@ -6,7 +6,6 @@ namespace Despark\LaravelDbLocalization\Traits;
 
 use Despark\LaravelDbLocalization\Models\TranslationModel;
 use Despark\LaravelDbLocalization\Observers\ModelObserver;
-use Despark\LaravelDbLocalization\Relations\Translation;
 
 /**
  * Class HasLocalization.
@@ -44,6 +43,33 @@ trait HasTranslation
         return $this->hasMany(TranslationModel::class, 'parent_id', 'id')->where('locale', \App::getLocale());
     }
 
+    
+    /**
+     * Create a new model instance for a related model.
+     * We overwrite this so we can dynamically create the table on the related model.
+     *
+     * @param  string $class
+     * @return mixed
+     */
+    protected function newRelatedInstance($class)
+    {
+
+        if (is_a($class, TranslationModel::class, true)) {
+            return tap(new $class, function ($instance) {
+                $instance->setTable($this->getTranslationTable());
+
+                if (! $instance->getConnectionName()) {
+                    $instance->setConnection($this->connection);
+                }
+            });
+        }
+
+        return tap(new $class, function ($instance) {
+            if (! $instance->getConnectionName()) {
+                $instance->setConnection($this->connection);
+            }
+        });
+    }
 
     /**
      * @param string $key
