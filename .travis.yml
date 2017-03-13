@@ -10,7 +10,7 @@ php:
 before_script:
   - mysql -u root -e 'create database translation_tests;'
   - composer self-update
-  - composer config --global github-oauth.github.com c95e8b8099ddf077cfd70536278c1540fcabf536
+  - composer config --global github-oauth.github.com $GHUBTOKEN
   - composer install --no-interaction
 
 script:
