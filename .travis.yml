@@ -1,11 +1,17 @@
 language: php
-
+dist: trusty
+sudo: required
+services:
+  -mysql
 php:
   - 7.0
   - 7.1
-  - hhvm
 
 before_script:
-  -
+  - mysql -u root -e 'create database translation_tests;'
+  - composer self-update
+  - composer config --global github-oauth.github.com c95e8b8099ddf077cfd70536278c1540fcabf536
+  - composer install --no-interaction
 
-script: phpunit
+script:
+  - vendor/bin/phpunit

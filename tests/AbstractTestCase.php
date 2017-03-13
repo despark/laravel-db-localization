@@ -26,9 +26,9 @@ abstract class AbstractTestCase extends AbstractPackageTestCase
         $app->config->set('database.connections.mysql', [
             'driver' => 'mysql',
             'host' => 'localhost',
-            'database' => 'translation_tests',
-            'username' => 'test',
-            'password' => 'test',
+            'database' => env('TEST_DB_DATABASE', 'translation_tests'),
+            'username' => env('TEST_DB_USERNAME', 'test'),
+            'password' => env('TEST_DB_PASSWORD', 'test'),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
@@ -42,7 +42,7 @@ abstract class AbstractTestCase extends AbstractPackageTestCase
 
 
         $app->setLocale('en');
-        
+
         $this->createTestTables();
     }
 
