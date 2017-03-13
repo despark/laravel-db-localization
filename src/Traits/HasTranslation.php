@@ -38,12 +38,12 @@ trait HasTranslation
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function translations()
+    public function translation()
     {
-        return $this->hasMany(TranslationModel::class, 'parent_id', 'id')->where('locale', \App::getLocale());
+        return $this->hasOne(TranslationModel::class, 'parent_id', 'id')->where('locale', \App::getLocale());
     }
 
-    
+
     /**
      * Create a new model instance for a related model.
      * We overwrite this so we can dynamically create the table on the related model.
