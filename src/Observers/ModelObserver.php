@@ -4,7 +4,8 @@
 namespace Despark\LaravelDbLocalization\Observers;
 
 
-use Despark\LaravelDbLocalization\Models\DbLocalizationModel;
+use Despark\LaravelDbLocalization\Contracts\Translatable;
+use Despark\LaravelDbLocalization\Models\TranslationModel;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -13,27 +14,36 @@ use Illuminate\Database\Eloquent\Model;
 class ModelObserver
 {
     /**
-     * @var DbLocalizationModel
+     * @var TranslationModel
      */
     protected $localizationModel;
 
     /**
      * ModelObserver constructor.
-     * @param DbLocalizationModel $localizationModel
+     * @param TranslationModel $localizationModel
      */
-    function __construct(DbLocalizationModel $localizationModel)
+    function __construct(TranslationModel $localizationModel)
     {
         $this->localizationModel = $localizationModel;
     }
 
-    /**
-     * @param Model $model
-     */
-    public function saved(Model $model)
+    public function saving(Translatable $model)
     {
+        // We need to clear all translatable from model
+        foreach ($model->getAttributes() as $attributeName => $value) {
+            if ($model->isTranslatable($attributeName)) {
+                unset($model->{$attributeName});
+            }
+        }
+    }
 
+    /**
+     * @param Model|Translatable $model
+     */
+    public function saved(Translatable $model)
+    {
         $this->localizationModel->setTable($model->getTranslationTable())
-                                ->setRawAttributes($model->getTranslatedAttributes())
+                                ->setTranslatableModel($model)
                                 ->save();
     }
 }
