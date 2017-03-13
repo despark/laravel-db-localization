@@ -168,7 +168,9 @@ class TranslationTest extends AbstractTestCase
 
         // Todo we need to find a way to load only required fields
         $all = TranslateModel::where($translateModel->getQualifiedKeyName(),
-            $translateModel->getKey())->get('not_translatable');
+            $translateModel->getKey())
+                             ->with(['translations'])
+                             ->get();
 
         $this->assertEquals(1, $all->count());
 
