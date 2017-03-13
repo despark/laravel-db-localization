@@ -169,7 +169,7 @@ class TranslationTest extends AbstractTestCase
         // Todo we need to find a way to load only required fields
         $all = TranslateModel::where($translateModel->getQualifiedKeyName(),
             $translateModel->getKey())
-                             ->with(['translations'])
+                             ->with(['translation'])
                              ->get();
 
         $this->assertEquals(1, $all->count());
@@ -177,7 +177,7 @@ class TranslationTest extends AbstractTestCase
         $this->assertEquals('test', $translateModel->field_1);
         $this->assertEquals('test2', $translateModel->field_2);
 
-        $translateModel->fresh();
+        $translateModel->fresh(['translation']);
 
         // Check if we switch locales
         $this->app->setLocale('bg');
