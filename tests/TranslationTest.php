@@ -22,7 +22,6 @@ class TranslationTest extends AbstractTestCase
     public function testCreatingTranslation()
     {
         $translateModel = new TranslateModel();
-        $translateModel->setTable('translate_test');
 
         $translateModel->not_translatable = 'Test';
 
@@ -68,7 +67,6 @@ class TranslationTest extends AbstractTestCase
     public function testLoadTranslations()
     {
         $translateModel = new TranslateModel();
-        $translateModel->setTable('translate_test');
 
         $translateModel->not_translatable = 'Test';
 
@@ -98,7 +96,6 @@ class TranslationTest extends AbstractTestCase
         $translateModel->loadTranslations();
 
         $this->assertNotEmpty($translateModel->getTranslatedAttributes());
-
     }
 
 
@@ -108,7 +105,6 @@ class TranslationTest extends AbstractTestCase
     public function testUpdateTranslation()
     {
         $translateModel = new TranslateModel();
-        $translateModel->setTable('translate_test');
 
         $translateModel->not_translatable = 'Test';
 
@@ -151,6 +147,41 @@ class TranslationTest extends AbstractTestCase
         $translateModel->refreshTranslations();
         $this->assertEquals('тест100', $translateModel->getTranslation('field_1', 'bg'));
         $this->assertEquals('тест2', $translateModel->getTranslation('field_2', 'bg'));
+    }
+
+    /**
+     *
+     */
+    public function testQuery()
+    {
+        $translateModel = new TranslateModel();
+
+        $translateModel->not_translatable = 'Test';
+
+        $translateModel->field_1 = 'test';
+        $translateModel->field_2 = 'test2';
+
+        $translateModel->setTranslation('field_1', 'bg', 'тест');
+        $translateModel->setTranslation('field_2', 'bg', 'тест2');
+
+        $translateModel->save();
+
+        // Todo we need to find a way to load only required fields
+        $all = TranslateModel::where($translateModel->getQualifiedKeyName(),
+            $translateModel->getKey())->get('not_translatable');
+
+        $this->assertEquals(1, $all->count());
+
+        $this->assertEquals('test', $translateModel->field_1);
+        $this->assertEquals('test2', $translateModel->field_2);
+
+        $translateModel->fresh();
+
+        // Check if we switch locales
+        $this->app->setLocale('bg');
+        $this->assertEquals('тест', $translateModel->field_1);
+        $this->assertEquals('тест2', $translateModel->field_2);
+
     }
 
 }

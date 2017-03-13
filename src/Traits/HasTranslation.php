@@ -6,6 +6,7 @@ namespace Despark\LaravelDbLocalization\Traits;
 
 use Despark\LaravelDbLocalization\Models\TranslationModel;
 use Despark\LaravelDbLocalization\Observers\ModelObserver;
+use Despark\LaravelDbLocalization\Scopes\TranslationScope;
 
 /**
  * Class HasLocalization.
@@ -33,6 +34,7 @@ trait HasTranslation
     public static function bootHasTranslation()
     {
         static::observe(ModelObserver::class);
+        static::addGlobalScope(new TranslationScope);
     }
 
     /**
@@ -207,5 +209,13 @@ trait HasTranslation
         $this->translatedAttributes = [];
         $this->translationsLoaded = false;
         $this->loadTranslations();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getTranslatable()
+    {
+        return $this->translatable;
     }
 }

@@ -58,4 +58,9 @@ interface Translatable
      */
     public function getDefaultLocale();
 
+    /**
+     * @return mixed
+     */
+    public function getTranslatable();
+
 }

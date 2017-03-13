@@ -16,4 +16,6 @@ class TranslateModel extends Model implements Translatable
 
     protected $fillable = ['not_translatable'];
 
+    protected $table = 'translate_test';
+
 }
