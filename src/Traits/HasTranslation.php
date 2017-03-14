@@ -99,6 +99,25 @@ trait HasTranslation
         $this->translatedAttributes[$locale][$key] = $value;
     }
 
+
+    /**
+     * @param $key
+     * @param $locale
+     * @return string|null
+     */
+    public function getTranslation($key, $locale = null)
+    {
+        if (is_null($locale)) {
+            $locale = $this->getCurrentLocale();
+        }
+        // We need to load translations.
+        $this->loadTranslations();
+
+        if ($this->isTranslatable($key)) {
+            return $this->translatedAttributes[$locale][$key] ?? null;
+        }
+    }
+
     /**
      * @param      $locale
      * @param null $key
@@ -136,23 +155,6 @@ trait HasTranslation
         return parent::setAttribute($key, $value);
     }
 
-    /**
-     * @param $key
-     * @param $locale
-     * @return string|null
-     */
-    public function getTranslation($key, $locale = null)
-    {
-        if (is_null($locale)) {
-            $locale = $this->getCurrentLocale();
-        }
-        // We need to load translations.
-        $this->loadTranslations();
-
-        if ($this->isTranslatable($key)) {
-            return $this->translatedAttributes[$locale][$key] ?? null;
-        }
-    }
 
     /**
      * Load transaltions from database.
