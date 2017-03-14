@@ -48,6 +48,20 @@ trait HasTranslation
         return $this->hasOne(TranslationModel::class, 'parent_id', 'id')->where('locale', \App::getLocale());
     }
 
+    /**
+     * Create a new instance of the given model.
+     *
+     * @param  array $attributes
+     * @param  bool  $exists
+     * @return static
+     */
+    public function newInstance($attributes = [], $exists = false)
+    {
+        $model = parent::newInstance($attributes, $exists);
+        $model->setActiveLocale($this->getActiveLocale());
+
+        return $model;
+    }
 
     /**
      * Create a new model instance for a related model.
@@ -144,17 +158,19 @@ trait HasTranslation
                 $value = null;
             }
         }
-
     }
 
     /**
      * @param $key
      * @param $value
+     * @return $this
      */
     public function setAttribute($key, $value)
     {
         if ($this->isTranslatable($key)) {
             $this->setTranslation($key, $this->getActiveLocale(), $value);
+
+            return $this;
         }
 
         return parent::setAttribute($key, $value);
