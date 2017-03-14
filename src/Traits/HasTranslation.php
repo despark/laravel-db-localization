@@ -28,6 +28,11 @@ trait HasTranslation
     protected $translationModel;
 
     /**
+     * @var string
+     */
+    protected $activeLocale;
+
+    /**
      * Bootstrap the trait
      */
     public static function bootHasTranslation()
@@ -149,7 +154,7 @@ trait HasTranslation
     public function setAttribute($key, $value)
     {
         if ($this->isTranslatable($key)) {
-            $this->setTranslation($key, $this->getDefaultLocale(), $value);
+            $this->setTranslation($key, $this->getActiveLocale(), $value);
         }
 
         return parent::setAttribute($key, $value);
@@ -198,6 +203,26 @@ trait HasTranslation
     public function getDefaultLocale()
     {
         return config('app.locale');
+    }
+
+    /**
+     * @return string
+     */
+    public function getActiveLocale(): string
+    {
+        if (! isset($this->activeLocale)) {
+            $this->activeLocale = $this->getDefaultLocale();
+        }
+
+        return $this->activeLocale;
+    }
+
+    /**
+     * @param string $activeLocale
+     */
+    public function setActiveLocale(string $activeLocale)
+    {
+        $this->activeLocale = $activeLocale;
     }
 
     /**
