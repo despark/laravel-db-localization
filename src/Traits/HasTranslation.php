@@ -1,8 +1,6 @@
 <?php
 
-
 namespace Despark\LaravelDbLocalization\Traits;
-
 
 use Despark\LaravelDbLocalization\Models\TranslationModel;
 use Despark\LaravelDbLocalization\Observers\ModelObserver;
@@ -33,7 +31,7 @@ trait HasTranslation
     protected $activeLocale;
 
     /**
-     * Bootstrap the trait
+     * Bootstrap the trait.
      */
     public static function bootHasTranslation()
     {
@@ -51,8 +49,9 @@ trait HasTranslation
     /**
      * Create a new instance of the given model.
      *
-     * @param  array $attributes
-     * @param  bool  $exists
+     * @param array $attributes
+     * @param bool  $exists
+     *
      * @return static
      */
     public function newInstance($attributes = [], $exists = false)
@@ -67,14 +66,14 @@ trait HasTranslation
      * Create a new model instance for a related model.
      * We overwrite this so we can dynamically create the table on the related model.
      *
-     * @param  string $class
+     * @param string $class
+     *
      * @return mixed
      */
     protected function newRelatedInstance($class)
     {
-
         if (is_a($class, TranslationModel::class, true)) {
-            return tap(new $class, function ($instance) {
+            return tap(new $class(), function ($instance) {
                 $instance->setTable($this->getTranslationTable());
 
                 if (! $instance->getConnectionName()) {
@@ -83,7 +82,7 @@ trait HasTranslation
             });
         }
 
-        return tap(new $class, function ($instance) {
+        return tap(new $class(), function ($instance) {
             if (! $instance->getConnectionName()) {
                 $instance->setConnection($this->connection);
             }
@@ -92,7 +91,6 @@ trait HasTranslation
 
     /**
      * @param string $key
-     * @return null
      */
     public function getAttribute($key)
     {
@@ -118,10 +116,10 @@ trait HasTranslation
         $this->translatedAttributes[$locale][$key] = $value;
     }
 
-
     /**
      * @param $key
      * @param $locale
+     *
      * @return string|null
      */
     public function getTranslation($key, $locale = null)
@@ -163,6 +161,7 @@ trait HasTranslation
     /**
      * @param $key
      * @param $value
+     *
      * @return $this
      */
     public function setAttribute($key, $value)
@@ -175,7 +174,6 @@ trait HasTranslation
 
         return parent::setAttribute($key, $value);
     }
-
 
     /**
      * Load transaltions from database.
@@ -218,7 +216,7 @@ trait HasTranslation
      */
     public function getDefaultLocale()
     {
-        return config('app.locale');
+        return config('app.fallback_locale');
     }
 
     /**
@@ -271,6 +269,7 @@ trait HasTranslation
 
     /**
      * @param $key
+     *
      * @return bool
      */
     public function isTranslatable($key)
@@ -278,9 +277,6 @@ trait HasTranslation
         return in_array($key, $this->translatable);
     }
 
-    /**
-     *
-     */
     public function refreshTranslations()
     {
         $this->translatedAttributes = [];
