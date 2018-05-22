@@ -216,6 +216,10 @@ trait HasTranslation
      */
     public function getDefaultLocale()
     {
+        if (request()->has('locale')) {
+            return request()->get('locale');
+        }
+
         return config('app.fallback_locale');
     }
 
